@@ -389,8 +389,8 @@ def send_request(message):
 
     text = message.text if message.text else message.caption
 
-    if text and text == 'выход в главное меню':
-        bot.send_message(message.chat.id, "выход в главное меню", reply_markup=start_menu_keyboard)
+    if text and text.lower() == 'выход в главное меню':
+        bot.send_message(message.chat.id, "Выход в главное меню", reply_markup=start_menu_keyboard)
     else:
         # Проверяем, находится ли пользователь в режиме ожидания
         cooldown_value = get_cooldown_value_from_db()
