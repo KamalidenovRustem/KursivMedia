@@ -1,0 +1,293 @@
+ERROR:TeleBot:Infinity polling exception: syntax error at or near "`"
+LINE 2:         UPDATE `groups`
+                       ^
+
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 575, in group_add
+    update_group_chat_id(new_chat_id)
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 557, in update_group_chat_id
+    cursor.execute('''
+psycopg2.errors.SyntaxError: syntax error at or near "`"
+LINE 2:         UPDATE `groups`
+                       ^
+
+
+ERROR:TeleBot:Infinity polling exception: syntax error at or near "`"
+LINE 2:         UPDATE `cooldown`
+                       ^
+
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 620, in set_cooldown
+    update_cooldown(new_cooldown)
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 602, in update_cooldown
+    cursor.execute('''
+psycopg2.errors.SyntaxError: syntax error at or near "`"
+LINE 2:         UPDATE `cooldown`
+                       ^
+
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Infinity polling exception: 'NoneType' object has no attribute 'strftime'
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 955, in infinity_polling
+    self.polling(non_stop=True, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1043, in polling
+    self.__threaded_polling(non_stop=non_stop, interval=interval, timeout=timeout, long_polling_timeout=long_polling_timeout,
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1118, in __threaded_polling
+    raise e
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 780, in process_requests
+    formatted_timestamp = timestamp.strftime("%d/%m/%Y %H:%M:%S")
+                          ^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strftime'
+
+ERROR:TeleBot:Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 817, in handle_request_action
+    bot.send_message(other_group_chat_id, f"\u0417\u0430\u044f\u0432\u043a\u0430 #{request_id} \u043e\u0434\u043e\u0431\u0440\u0435\u043d\u0430. \u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u044f\u0432\u043a\u0438:\n{request_text}")
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1549, in send_message
+    apihelper.send_message(
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 162, in _make_request
+    json_result = _check_result(method_name, result)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 189, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+
+ERROR:TeleBot:Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 817, in handle_request_action
+    bot.send_message(other_group_chat_id, f"\u0417\u0430\u044f\u0432\u043a\u0430 #{request_id} \u043e\u0434\u043e\u0431\u0440\u0435\u043d\u0430. \u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u044f\u0432\u043a\u0438:\n{request_text}")
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1549, in send_message
+    apihelper.send_message(
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 162, in _make_request
+    json_result = _check_result(method_name, result)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 189, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+
+ERROR:TeleBot:Threaded polling exception: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+ERROR:TeleBot:Exception traceback:
+Traceback (most recent call last):
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1074, in __threaded_polling
+    self.worker_pool.raise_exceptions()
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 147, in raise_exceptions
+    raise self.exception_info
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\util.py", line 90, in run
+    task(*args, **kwargs)
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 6801, in _run_middlewares_and_handler
+    result = handler['function'](message)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\32468\Desktop\KursivMedia\KursivMedia\KursivTelebot.py", line 817, in handle_request_action
+    bot.send_message(other_group_chat_id, f"\u0417\u0430\u044f\u0432\u043a\u0430 #{request_id} \u043e\u0434\u043e\u0431\u0440\u0435\u043d\u0430. \u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u044f\u0432\u043a\u0438:\n{request_text}")
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\__init__.py", line 1549, in send_message
+    apihelper.send_message(
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 264, in send_message
+    return _make_request(token, method_url, params=payload, method='post')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 162, in _make_request
+    json_result = _check_result(method_name, result)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\32468\Desktop\KursivMedia\KursivMedia\kursiv\Lib\site-packages\telebot\apihelper.py", line 189, in _check_result
+    raise ApiTelegramException(method_name, result, result_json)
+telebot.apihelper.ApiTelegramException: A request to the Telegram API was unsuccessful. Error code: 400. Description: Bad Request: chat not found
+
