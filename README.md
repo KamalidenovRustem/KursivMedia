@@ -53,7 +53,7 @@
 Мы рады работать вместе с Kursiv Media! Если у вас есть идеи, предложения или желание исправить ошибку, пожалуйста, создайте Issue или Pull Request.
 
 ## Разработчики
-Rustem Kamalidenov, Marsel Sagandykov, Matvey Ivashckenko
+Rustem Kamalidenov, Marsel Sagandykov
 
 ## Лицензия
 Этот проект лицензирован под MIT License - см. файл LICENSE для подробностей.
