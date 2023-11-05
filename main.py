@@ -17,6 +17,7 @@ config = dotenv_values(".env")
 
 # Свои настройки PostgreSQL
 db_host = (config['DATABASE_HOST'])
+db_port = (config['DATABASE_PORT'])
 db_name = (config['DATABASE_NAME'])
 db_user = (config['DATABASE_USER'])
 db_password = (config['DATABASE_PASSWORD'])
@@ -28,6 +29,7 @@ bot = telebot.TeleBot(token)
 # Соединение с базой данных
 conn = psycopg2.connect(
     host=db_host,
+    port = db_port,
     database=db_name,
     user=db_user,
     password=db_password
