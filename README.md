@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.png" alt="KursivMedia Logo">
+  <img src="https://cdn-kz.kursiv.media/wp-content/themes/kursiv/dist/img/logo.svg" alt="KursivMedia Logo">
   <h1>KursivMedia Telegram Bot</h1>
   <p>
     <a href="https://www.python.org/"><img src="https://img.shields.io/badge/Made%20with-Python-3776AB?logo=python&logoColor=white" alt="Made with Python"></a>
