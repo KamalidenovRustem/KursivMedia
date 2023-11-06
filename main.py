@@ -161,14 +161,19 @@ def get_cooldown_value_from_db():
 #Логирование
 logging.basicConfig(filename='bot.log', level=logging.INFO)
 
-#Стартовое меню
+#Получение команды
 @bot.message_handler(commands=['get'])
 def send_chat_id(message):
-    # Проверка, что команда выполняется в групповом чате
-    if message.chat.type in ["group", "supergroup"]:
-        bot.reply_to(message, f"Chat ID этой группы: {message.chat.id}")
+    # Check if the user who sent the command is in the moderator_ids list
+    if message.from_user.id in moderator_ids:
+        # Check if the message is in a group or supergroup chat
+        if message.chat.type in ["group", "supergroup"]:
+            # Send the chat ID as a private message to the user
+            bot.send_message(message.from_user.id, f"Chat ID этой группы: {message.chat.id}")
+        else:
+            bot.reply_to(message, "Эта команда должна быть выполнена в групповом чате.")
     else:
-        bot.reply_to(message, "Эта команда должна быть выполнена в групповом чате.")
+        bot.reply_to(message, "Вы не имеете доступа к этой команде.")
 
 #Создание Клавиатуры
 def create_keyboard(buttons):
@@ -242,7 +247,7 @@ def repeat_all_messages(message):
         button = types.KeyboardButton(text='Выход в главное меню')
         markup.add(button)
 
-        if message.text.lower() == 'выход в главное меню':
+        if message.text and message.text.lower() == 'выход в главное меню':
           bot.send_message(message.chat.id, "Выход в главное меню", reply_markup=start_menu_keyboard)
         else:
           bot.send_message(message.chat.id, 'Чтобы отправить материал, введите или вставьте ниже свой контент в чат одним сообщением. Вы также можете прикрепить фото и видео к вашей статье. \n Обязательно укажите заголовок для вашей статьи и выделите в тексте ссылки на источники. \n Если вы хотите, чтобы вас упомянули как автора материала, в конце текста укажите своё имя/никнейм.', 
@@ -286,7 +291,7 @@ def check_request_status(message):
     if not user_requests:
         bot.send_message(user_id, "У вас нет активных заявок.", reply_markup=start_menu_keyboard)
     else:
-        bot.send_message(user_id, "Ваши заявки:")
+        bot.send_message(user_id, f"Помните, что бот отправляет лишь {request_limit} последних заявок. \n Ваши заявки:")
 
         for request in user_requests:
             request_id, status, timestamp = request
@@ -304,10 +309,13 @@ def check_request_status(message):
                                           f"\nДата: {formatted_timestamp}"
                                           f"\nНажмите на кнопку, чтобы узнать причину отклонения:", reply_markup=markup)
 
+# Определение количества запросов для извлечения
+request_limit = 10
 
 def get_user_requests(user_id):
     user_requests = []
-    cursor.execute("SELECT id, status, time FROM requests WHERE user_id = %s", (user_id,))
+    # SQL-запрос, чтобы упорядочить результаты по времени и ограничить результаты
+    cursor.execute("SELECT id, status, time FROM requests WHERE user_id = %s ORDER BY time DESC LIMIT %s", (user_id, request_limit))
     results = cursor.fetchall()
 
     for row in results:
@@ -502,7 +510,7 @@ def add_mod(message):
     user_id = message.from_user.id
 
     if user_id in moderator_ids:  # Проверка, что команду отправляет модератор
-        bot.send_message(user_id, "Введите chatid модератора или введите 'выход в меню модератора' для возврата в главное меню:")
+        bot.send_message(user_id, "Введите chatid модератора. Чтобы получить id модератора, пройдите по ссылке @getmyid_bot или введите 'выход в меню модератора' для возврата в главное меню:")
         bot.register_next_step_handler(message, mod_add)
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
@@ -541,7 +549,7 @@ def add_group(message):
     user_id = message.from_user.id
 
     if user_id in moderator_ids:  # проверка, что команду отправляет модератор
-        bot.send_message(user_id, "Введите chatid группы \n (Chat id начинается с -; \n у бота должны быть права админ.) или введите 'выход в меню модератора' для возврата в главное меню:")
+        bot.send_message(user_id, "Введите chatid группы \n (Chat id начинается с -; \n у бота должны быть права админ. Чтобы узнать ID группы пригласите бота в чат группы и напишите команду /get) или введите 'выход в меню модератора' для возврата в главное меню:")
         bot.register_next_step_handler(message, group_add)
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
