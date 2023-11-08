@@ -193,7 +193,7 @@ moderator_buttons = ["Посмотреть заявки", "Рассылка", "�
 moderator_keyboard = create_keyboard(moderator_buttons)
 
 # Настройки бота у модератора
-settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить время кулдауна", "Выход из настроек"]
+settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить интервал отправки заявок", "Вернуться Назад"]
 settings_keyboard = create_keyboard(settings_buttons)
 
 # Обработчик команды "старт"
@@ -487,7 +487,7 @@ def settings_menu(message):
 
     if user_id in moderator_ids:  # Проверка, что команду отправляет модератор
         # Создаем клавиатуру на основе списка кнопок
-        settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить время кулдауна", "Выход в меню модератора"]
+        settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить интервал отправки заявок", "Вернуться Назад"]
         settings_keyboard = create_keyboard(settings_buttons)
 
         # Отправляем сообщение с этой клавиатурой
@@ -508,9 +508,12 @@ def update_moderator_ids():
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'добавить модератора')  # and message.from_user.id in moderator_ids)
 def add_mod(message):
     user_id = message.from_user.id
+    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    button_exit = types.KeyboardButton(text='Вернуться Назад')
+    markup.add(button_exit)
 
     if user_id in moderator_ids:  # Проверка, что команду отправляет модератор
-        bot.send_message(user_id, "Введите chatid модератора. Чтобы получить id модератора, пройдите по ссылке @getmyid_bot или введите 'выход в меню модератора' для возврата в главное меню:")
+        bot.send_message(user_id, "Введите Chat ID Модератора: \n Чтобы получить ID модератора, пройдите по ссылке \n @getmyid_bot \n Пример: 5746051320 \n или нажмите на кнопку '⬅️ Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, mod_add)
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
@@ -519,7 +522,7 @@ def mod_add(message):
     moder_int = message.text  # замена имени переменной здесь
     user_id = message.from_user.id
 
-    if moder_int.lower() == 'выход в меню модератора':
+    if moder_int.lower() == 'вернуться Назад':
         bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
         return
 
@@ -547,9 +550,13 @@ def mod_add(message):
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'изменить группу')  # and message.from_user.id in moderator_ids)
 def add_group(message):
     user_id = message.from_user.id
+    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    button_exit = types.KeyboardButton(text='Вернуться Назад')
+    markup.add(button_exit)
+
 
     if user_id in moderator_ids:  # проверка, что команду отправляет модератор
-        bot.send_message(user_id, "Введите chatid группы \n (Chat id начинается с -; \n у бота должны быть права админ. Чтобы узнать ID группы пригласите бота в чат группы и напишите команду /get) или введите 'выход в меню модератора' для возврата в главное меню:")
+        bot.send_message(user_id, "Введите Chat ID Канала для Публикаций: \n Чтобы узнать ID группы необходимо добавить данного Бота в канал, выдать разрешение на все функции и написать команду /get в группу.\n Пример: -1001965855662 \n или нажмите на кнопку 'Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, group_add)
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
@@ -575,7 +582,7 @@ def group_add(message):
     text = message.text
     user_id = message.from_user.id
 
-    if text.lower() == 'выход в меню модератора':
+    if text.lower() == 'вернуться назад':
         bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
         return
 
@@ -597,12 +604,15 @@ def group_add(message):
 
 
 # Функция для изменения cooldown
-@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'изменить время кулдауна')  # and message.from_user.id in moderator_ids)
+@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'Изменить интервал отправки заявок')  # and message.from_user.id in moderator_ids)
 def add_cooldown(message):
     user_id = message.from_user.id
+    markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
+    button_exit = types.KeyboardButton(text='Вернуться Назад')
+    markup.add(button_exit)
 
     if user_id in moderator_ids:  # проверка, что команду отправляет модератор
-        bot.send_message(user_id, "Введите новое значение cooldown (в секундах) или введите 'выход в меню модератора' для возврата в главное меню:")
+        bot.send_message(user_id, "Введите новое значение интервала отправки новых заявок в секундах. \n или нажмите кнопку 'Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, set_cooldown)
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
@@ -620,7 +630,7 @@ def set_cooldown(message):
     text = message.text
     user_id = message.from_user.id
 
-    if text.lower() == 'выход в меню модератора':
+    if text.lower() == 'Вернуться назад':
         bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
         return
 
@@ -638,7 +648,7 @@ def set_cooldown(message):
 
 
 #Выход в меню модератора
-@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'выход в меню модератора' )#and message.from_user.id in moderator_ids)
+@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'Вернуться назад' )#and message.from_user.id in moderator_ids)
 def exit(message):
     user_id = message.from_user.id
     if user_id in moderator_ids:  # Проверка что команду выполняет модератор
@@ -668,7 +678,7 @@ def publish_text_to_group(message):
     user_id = message.from_user.id
     text_to_publish = message.text or message.caption
 
-    if text_to_publish and text_to_publish.lower() == 'выход в меню модератора':
+    if text_to_publish and text_to_publish.lower() == 'Вернуться Назад':
             bot.send_message(message.chat.id, "Выход в меню модератор", reply_markup=moderator_keyboard)
             return
 
@@ -711,7 +721,7 @@ def send_all_message(message):
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
     button_exit = types.KeyboardButton(text='выход в меню модератора')
     markup.add(button_exit)
-    bot.send_message(message.chat.id, "Введите сообщение для рассылки или нажмите на кнопку для выхода в меню модератора", reply_markup=markup)
+    bot.send_message(message.chat.id, Введите текст и прикрепите медиа-файлы, чтобы осуществить рассылку всем пользователям Бота. \n или нажмите кнопку 'Вернуться Назад' ", reply_markup=markup)
 
     # После этого, регистрируем следующий шаг
     bot.register_next_step_handler(message, send_message_to_all)
@@ -721,7 +731,7 @@ def send_message_to_all(message):
     user_id = message.from_user.id
     text = message.text or message.caption
 
-    if text and text.lower() == 'выход в меню модератора':
+    if text and text.lower() == 'Вернуться Назад':
         bot.send_message(message.chat.id, "Выход в меню модератор", reply_markup=moderator_keyboard)
         return
 
