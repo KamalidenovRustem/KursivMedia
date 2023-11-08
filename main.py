@@ -604,7 +604,7 @@ def group_add(message):
 
 
 # Функция для изменения cooldown
-@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'Изменить интервал отправки заявок')  # and message.from_user.id in moderator_ids)
+@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'изменить интервал отправки заявок')  # and message.from_user.id in moderator_ids)
 def add_cooldown(message):
     user_id = message.from_user.id
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
@@ -630,7 +630,7 @@ def set_cooldown(message):
     text = message.text
     user_id = message.from_user.id
 
-    if text.lower() == 'Вернуться назад':
+    if text.lower() == 'вернуться назад':
         bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
         return
 
@@ -648,7 +648,7 @@ def set_cooldown(message):
 
 
 #Выход в меню модератора
-@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'Вернуться назад' )#and message.from_user.id in moderator_ids)
+@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'вернуться назад' )#and message.from_user.id in moderator_ids)
 def exit(message):
     user_id = message.from_user.id
     if user_id in moderator_ids:  # Проверка что команду выполняет модератор
@@ -667,7 +667,7 @@ def request_text_for_publication(message):
         return
 
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-    button_exit = types.KeyboardButton(text='выход в меню модератора')
+    button_exit = types.KeyboardButton(text='Вернуться Назад')
     markup.add(button_exit)
     bot.send_message(message.chat.id, "Введите текст для публикации или нажмите на кнопку для выхода в меню модератора", reply_markup=markup)
 
@@ -678,7 +678,7 @@ def publish_text_to_group(message):
     user_id = message.from_user.id
     text_to_publish = message.text or message.caption
 
-    if text_to_publish and text_to_publish.lower() == 'Вернуться Назад':
+    if text_to_publish and text_to_publish.lower() == 'вернуться назад':
             bot.send_message(message.chat.id, "Выход в меню модератор", reply_markup=moderator_keyboard)
             return
 
@@ -719,7 +719,7 @@ def send_all_message(message):
         return
 
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
-    button_exit = types.KeyboardButton(text='выход в меню модератора')
+    button_exit = types.KeyboardButton(text='Вернуться Назад')
     markup.add(button_exit)
     bot.send_message(message.chat.id, "Введите текст и прикрепите медиа-файлы, чтобы осуществить рассылку всем пользователям Бота. \n или нажмите кнопку 'Вернуться Назад' ", reply_markup=markup)
 
@@ -731,7 +731,7 @@ def send_message_to_all(message):
     user_id = message.from_user.id
     text = message.text or message.caption
 
-    if text and text.lower() == 'Вернуться Назад':
+    if text and text.lower() == 'вернуться назад':
         bot.send_message(message.chat.id, "Выход в меню модератор", reply_markup=moderator_keyboard)
         return
 
