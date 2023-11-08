@@ -542,7 +542,7 @@ def mod_add(message):
         # Обновить переменную moderator_ids
         global moderator_ids
         moderator_ids = update_moderator_ids()
-    except psycopg2.connector.Error as err:
+    except psycopg2.Error as err:
         # Обработка ошибки базы данных, например, нарушение целостности и т. д.
         print("Database Error:", err)
 
