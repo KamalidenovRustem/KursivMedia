@@ -522,7 +522,7 @@ def mod_add(message):
     moder_int = message.text  # замена имени переменной здесь
     user_id = message.from_user.id
 
-    if moder_int.lower() == 'вернуться Назад':
+    if moder_int.lower() == 'вернуться назад':
         bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
         return
 
