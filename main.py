@@ -721,7 +721,7 @@ def send_all_message(message):
     markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
     button_exit = types.KeyboardButton(text='выход в меню модератора')
     markup.add(button_exit)
-    bot.send_message(message.chat.id, Введите текст и прикрепите медиа-файлы, чтобы осуществить рассылку всем пользователям Бота. \n или нажмите кнопку 'Вернуться Назад' ", reply_markup=markup)
+    bot.send_message(message.chat.id, "Введите текст и прикрепите медиа-файлы, чтобы осуществить рассылку всем пользователям Бота. \n или нажмите кнопку 'Вернуться Назад' ", reply_markup=markup)
 
     # После этого, регистрируем следующий шаг
     bot.register_next_step_handler(message, send_message_to_all)
