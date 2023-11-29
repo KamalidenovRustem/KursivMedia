@@ -164,11 +164,11 @@ logging.basicConfig(filename='bot.log', level=logging.INFO)
 #Получение команды
 @bot.message_handler(commands=['get'])
 def send_chat_id(message):
-    # Check if the user who sent the command is in the moderator_ids list
+    # Проверьте, есть ли пользователь, отправивший команду, в списке moderator_ids
     if message.from_user.id in moderator_ids:
-        # Check if the message is in a group or supergroup chat
+        # Проверьте, находится ли сообщение в групповом или супергрупповом чате
         if message.chat.type in ["group", "supergroup"]:
-            # Send the chat ID as a private message to the user
+            # Отправьте идентификатор чата пользователю в личном сообщении.
             bot.send_message(message.from_user.id, f"Chat ID этой группы: {message.chat.id}")
         else:
             bot.reply_to(message, "Эта команда должна быть выполнена в групповом чате.")
@@ -205,17 +205,17 @@ def handle_start(message):
 
   user_id = message.from_user.id
 
-  if user_id in moderator_ids:  # Check if the user is a moderator
+  if user_id in moderator_ids:  # Проверьте, является ли пользователь модератором
         bot.send_message(user_id, "Вы модератор.", reply_markup=moderator_keyboard)
   else:
         bot.send_message(user_id, "Вы пользователь.", reply_markup=start_menu_keyboard)
 
-    # Check if the user is not already in the 'users' table
+    # Проверьте, нет ли пользователя еще в таблице «пользователи».
   cursor.execute("SELECT id FROM users WHERE user_id = %s", (user_id,))
   user_exists = cursor.fetchone()
 
   if not user_exists:
-    # If the user is not in the database, insert them
+    # Если пользователя нет в базе данных, вставьте его
       cursor.execute("INSERT INTO users (user_id) VALUES (%s)", (user_id,))
       conn.commit()
       bot.send_message(message.chat.id, 'Привет! \n С помощью этого бота вы можете отправить материал для Kursiv Playground.', 
@@ -223,11 +223,10 @@ def handle_start(message):
       
 
 #Основной функционал
-# Function to handle the "Отправить материал" command
+#Функция для обработки команды «Отправить материал».
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'отправить материал')
 def send_material_command(message):
     if message.text.lower() == 'отправить материал':
-        #bot.delete_message(message.chat.id, message.message_id - 1)
         Keyboard = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
         button = types.KeyboardButton(text='Оставить заявку')
         button2 = types.KeyboardButton(text='Выход в главное меню')
@@ -240,9 +239,6 @@ def send_material_command(message):
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'оставить заявку')
 def repeat_all_messages(message):
     if message.text.lower() == 'оставить заявку':
-        #Delete the button
-        #markup = types.ReplyKeyboardRemove(selective=False)
-
         markup = types.ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
         button = types.KeyboardButton(text='Выход в главное меню')
         markup.add(button)
@@ -263,9 +259,7 @@ def repeat_all_messages(message):
         Keyboard = types.InlineKeyboardMarkup()
         Url_button = types.InlineKeyboardButton(text='Ссылка на наш сайт', url="https://kz.kursiv.media/")
         Keyboard.add(Url_button)
-        #bot.delete_message(message.chat.id, message.message_id - 1)
         bot.send_message(message.chat.id, "Немного о Playground \n (Общая вводная инфо, принципы издания)", reply_markup=Keyboard)
-
 
 
 # Команда "Контакты"
@@ -276,7 +270,6 @@ def repeat_all_messages(message):
         Url_button1 = types.InlineKeyboardButton(text='Telegram', url="https://www.youtube.com/watch?v=Zi_XLOBDo_Y")
         Url_button2 = types.InlineKeyboardButton(text='WhatsApp', url="https://www.youtube.com/watch?v=dQw4w9WgXcQ")
         Keyboard.add(Url_button1, Url_button2)
-        #bot.delete_message(message.chat.id, message.message_id - 1)
         bot.send_message(message.chat.id, "Контакты для обратной связи и по вопросам сотрудничества", reply_markup=Keyboard)
 
 
@@ -361,24 +354,6 @@ def get_all_users():
         users.append(row[0])
     return users
 
-# При подписке нового пользователя добавляем его user_id в базу данных
-def add_user(user_id):
-    cursor.execute("INSERT INTO users (user_id) VALUES (%s)", (user_id,))
-    conn.commit()
-
-## ЧТО ЭТО  ##
-def publish_text_to_group(message):
-    user_id = message.from_user.id
-
-    if user_id in moderator_ids:
-        text_to_publish = message.text  # Получите текст, который ввел модератор
-
-        # Отправьте текст в другую группу
-        bot.send_message(other_group_chat_id, text_to_publish)
-        bot.send_message(user_id, "Сообщение успешно опубликовано в другой группе.")
-    else:
-        bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
-
 
 # Функция для проверки количества слов в тексте
 def check_word_count(text, min_count, max_count):
@@ -391,6 +366,7 @@ def check_word_count(text, min_count, max_count):
 
 
 user_cooldown = {}
+#Обработчик заявки 
 @bot.message_handler(content_types=['text', 'photo', 'video'], func=lambda message: message.chat.type == 'private' and message.from_user.id not in moderator_ids)
 def send_request(message):
     user_id = message.from_user.id
@@ -409,7 +385,6 @@ def send_request(message):
 
         # Инициализируем переменные для хранения содержания файла и текста
         user_message = None
-        user_message_photo = None
         user_message_photo = None
         photo_id = None
         video_id = None
@@ -780,7 +755,7 @@ def create_request_buttons(request_id):
 # Функция для получение имени пользовтеля
 def get_user_name_by_id(user_id):
     user = bot.get_chat(user_id)
-    user_name = user.first_name  # You can also use user.last_name for the last name
+    user_name = user.first_name  # Вы также можете использовать user.last_name для фамилии
     return user_name
 
 # добавление кнопки для каждой заявки
@@ -801,13 +776,13 @@ def process_requests(message):
                 request_markup = create_request_buttons(request_id)
                 user_name = get_user_name_by_id(user_id)
 
-                # Check if there is a photo or video in the request and send it accordingly
+                # Проверяем, есть ли в запросе фото или видео и соответственно отправляем
                 if photo_id:
                     bot.send_photo(moder_id, photo_id, caption=f"Заявка #{request_id}\nПользователь: {user_name}\nДата: {formatted_timestamp}\nСодержание: {text}", reply_markup=request_markup)
                 elif video_id:
                     bot.send_video(moder_id, video_id, caption=f"Заявка #{request_id}\nПользователь: {user_name}\nДата: {formatted_timestamp}\nСодержание: {text}", reply_markup=request_markup)
                 else:
-                    # If there is no photo or video, just send the text
+                    # Если фото или видео нет, просто отправьте текст
                     bot.send_message(moder_id, f"Заявка #{request_id}\nПользователь: {user_name}\nДата: {formatted_timestamp}\nСодержание: {text}", reply_markup=request_markup)
     else:
           bot.send_message(moder_id, "У вас нет прав для выполнения этой команды.")
@@ -859,7 +834,7 @@ def handle_request_action(call):
         # обработчик сообщений для получения причины отклонения от модератора.
         bot.register_next_step_handler(call.message, save_rejection_reason, request_id, user_id)
 
-# Define the save_rejection_reason function with an additional request_id and user_id parameter
+# Определите функцию save_rejection_reason с дополнительными параметрами request_id и user_id.
 def save_rejection_reason(message, request_id, user_id):
     rejection_reason = message.text
     try:
