@@ -10,7 +10,7 @@ from telebot import types
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, CallbackContext
 from dotenv import  dotenv_values
-
+from tabulate import tabulate
 # Загружаем переменные с .env файла
 config = dotenv_values(".env")
 
@@ -48,6 +48,7 @@ cursor.execute(
         video TEXT,
         status INTEGER,
         rejection_reason TEXT,
+        accept_reason TEXT, 
         time TIMESTAMP DEFAULT current_timestamp
     );
     """
@@ -58,6 +59,25 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         user_id BIGINT
+        user_name TEXT
+    );
+''')
+
+# Таблица для хранения информации о банах
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS bans (
+        id SERIAL PRIMARY KEY,
+        ban_id BIGINT
+        ban_text TEXT
+        ban_date TIMESTAMP
+    );
+''')
+
+# Создание таблицы админов, если она не существует
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS admins (
+        id SERIAL PRIMARY KEY,
+        admin_id BIGINT
     );
 ''')
 
@@ -108,13 +128,28 @@ insert_data(cursor, 'groups', 'group_id', group_id)
 cooldown_int = 60
 insert_data(cursor, 'cooldown', 'cooldown_value', cooldown_int)
 
-# Вставка модератора в таблицу "moderators"
-first_moder_id = 1732450131
-insert_data(cursor, 'moderators', 'moder_id', first_moder_id)
+# Вставка админа в таблицу "admins"
+first_admin_id = 1732450131
+insert_data(cursor, 'admins', 'admin_id', first_admin_id)
 
 
 
 #Телеграм-бот 
+
+# Извлечение идентификаторов Админа из базы данных и заполнение списка admin_ids
+def retrieve_admin_ids(cursor):
+    # SQL-запрос для извлечения идентификаторов модераторов
+    cursor.execute("SELECT admin_id FROM admins")
+    admin_records = cursor.fetchall()
+
+    # Извлечение идентификаторов модераторов из записей и сохранение их в списке admin_ids
+    admin_ids = [record[0] for record in admin_records]
+
+    return admin_ids
+
+
+#Получение админов
+admin_ids = retrieve_admin_ids(cursor)
 
 # Извлечение идентификаторов модераторов из базы данных и заполнение списка moderator_ids
 def retrieve_moderator_ids(cursor):
@@ -189,38 +224,60 @@ user_buttons = ["Отправить материал", "О нас", "Конта�
 start_menu_keyboard = create_keyboard(user_buttons)
 
 # Клавиатура модератора
-moderator_buttons = ["Посмотреть заявки", "Рассылка", "Настройка бота", "Публикация на канале",]
+moderator_buttons = ["Посмотреть заявки", "Рассылка", "Публикация на канале"]
 moderator_keyboard = create_keyboard(moderator_buttons)
 
 # Настройки бота у модератора
 settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить интервал отправки заявок", "Вернуться Назад"]
 settings_keyboard = create_keyboard(settings_buttons)
 
+# Настройки Супер Администратора
+admin_buttons = ["Получение лидер борда", "Настройка бота"]
+admin_keyboard = create_keyboard(admin_buttons)
+
 # Обработчик команды "старт"
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-  if message.chat.type != 'private':
+    if message.chat.type != 'private':
         bot.send_message(message.chat.id, "Этот бот работает только в приватных чатах.")
         return
 
-  user_id = message.from_user.id
+    user_id = message.from_user.id
 
-  if user_id in moderator_ids:  # Проверьте, является ли пользователь модератором
+    if user_id in admin_ids:
+        bot.send_message(user_id, "Вы админестратор.", reply_markup=admin_keyboard)
+    elif user_id in moderator_ids:
         bot.send_message(user_id, "Вы модератор.", reply_markup=moderator_keyboard)
-  else:
+    else:
         bot.send_message(user_id, "Вы пользователь.", reply_markup=start_menu_keyboard)
 
-    # Проверьте, нет ли пользователя еще в таблице «пользователи».
-  cursor.execute("SELECT id FROM users WHERE user_id = %s", (user_id,))
-  user_exists = cursor.fetchone()
+    cursor.execute("SELECT id FROM users WHERE user_id = %s", (user_id,))
+    user_exists = cursor.fetchone()
 
-  if not user_exists:
-    # Если пользователя нет в базе данных, вставьте его
-      cursor.execute("INSERT INTO users (user_id) VALUES (%s)", (user_id,))
-      conn.commit()
-      bot.send_message(message.chat.id, 'Привет! \n С помощью этого бота вы можете отправить материал для Kursiv Playground.', 
-                       reply_markup=start_menu_keyboard) # Инициация стартового меню для пользоватлей
-      
+    if not user_exists:
+        # Если пользователя нет в базе данных, запросить имя у пользователя
+        bot.send_message(user_id, "Привет! Введите ваше имя:")
+        bot.register_next_step_handler(message, save_user_name, user_id)
+    else:
+        # Если имя уже есть, приветствовать пользователя
+        user_id, user_name = user_exists
+        bot.send_message(message.chat.id, f'Привет, {user_name}!', reply_markup=start_menu_keyboard)
+
+def save_user_name(message, user_id):
+    user_name = message.text.strip()
+
+    # Сохранить имя пользователя в базе данных
+    cursor.execute(
+        "INSERT INTO users (user_id, user_name) VALUES (%s, %s) ON CONFLICT (user_id) DO UPDATE SET user_name = EXCLUDED.user_name",
+        (user_id, user_name))
+    conn.commit()
+
+    bot.send_message(message.chat.id, f'Спасибо, {user_name}! Теперь вы зарегистрированы.',
+                     reply_markup=start_menu_keyboard)
+
+        # Отправляем изображение
+        #with open('путь_к_изображению.jpg', 'rb') as photo:
+            #bot.send_photo(message.chat.id, photo)
 
 #Основной функционал
 #Функция для обработки команды «Отправить материал».
@@ -233,7 +290,9 @@ def send_material_command(message):
         Keyboard.add(button, button2)
         bot.send_message(message.chat.id, "Критерии материала: \n *Ограничения по символам \n *Фактчекинг \n *Оригинальность \n *Предупреждение о ненарушении законодательства РК \n *Какие материалы ожидаем (темы, формат) \n *Инфо о конкурсе ", 
                          reply_markup=Keyboard)
-        
+        # Отправляем изображение
+        #with open('путь_к_изображению.jpg', 'rb') as photo:
+            #bot.send_photo(message.chat.id, photo)
 
 # Команда "Оставить заявку"
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'оставить заявку')
@@ -261,6 +320,9 @@ def repeat_all_messages(message):
         Keyboard.add(Url_button)
         bot.send_message(message.chat.id, "Немного о Playground \n (Общая вводная инфо, принципы издания)", reply_markup=Keyboard)
 
+        # Отправляем изображение
+        #with open('путь_к_изображению.jpg', 'rb') as photo:
+            #bot.send_photo(message.chat.id, photo)
 
 # Команда "Контакты"
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'контакты')
@@ -272,6 +334,9 @@ def repeat_all_messages(message):
         Keyboard.add(Url_button1, Url_button2)
         bot.send_message(message.chat.id, "Контакты для обратной связи и по вопросам сотрудничества", reply_markup=Keyboard)
 
+        # Отправляем изображение
+        #with open('путь_к_изображению.jpg', 'rb') as photo:
+            #bot.send_photo(message.chat.id, photo)
 
 
 # Команда "Посмотреть статус заявок"
@@ -302,6 +367,9 @@ def check_request_status(message):
                                           f"\nДата: {formatted_timestamp}"
                                           f"\nНажмите на кнопку, чтобы узнать причину отклонения:", reply_markup=markup)
 
+        # Отправляем изображение
+        #with open('путь_к_изображению.jpg', 'rb') as photo:
+            #bot.send_photo(message.chat.id, photo)
 # Определение количества запросов для извлечения
 request_limit = 10
 
@@ -444,9 +512,33 @@ def send_request(message):
             # Обрабатываем ошибки базы данных здесь
             print(f"Database Error: {err}")
 
+# Раздел Админа
+@bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'получение лидерборда')
+def get_leaderboard(message):
+    user_id = message.from_user.id
+    if user_id in admin_ids:
+        # Запрос для получения информации
+        query = '''
+            SELECT u.user_id, COUNT(r.id) AS total_requests, 
+                   SUM(CASE WHEN r.status = 1 THEN 1 ELSE 0 END) AS successful_requests,
+                   SUM(CASE WHEN r.status = 0 THEN 1 ELSE 0 END) AS unsuccessful_requests
+            FROM users u
+            LEFT JOIN requests r ON u.user_id = r.user_id
+            GROUP BY u.user_id
+            ORDER BY u.user_id;  -- Порядок вывода может быть изменен
+        '''
 
+        cursor.execute(query)
+        leaderboard_data = cursor.fetchall()
 
-#Раздел модератора
+        # Форматирование данных в виде таблицы
+        table_headers = ["Имя пользователя", "Отправленных заявок", "Успешно", "Не успешно"]
+        table_data = [(row[0], row[1], row[2], row[3]) for row in leaderboard_data]
+
+        # Отправка таблицы в чат
+        leaderboard_table = tabulate(table_data, headers=table_headers, tablefmt="grid")
+        bot.send_message(message.chat.id, leaderboard_table, parse_mode="HTML")
+
 #Функия проверки integer для заполнения данных в базу данных
 def is_int(s):
     try:
@@ -460,7 +552,7 @@ def is_int(s):
 def settings_menu(message):
     user_id = message.from_user.id
 
-    if user_id in moderator_ids:  # Проверка, что команду отправляет модератор
+    if user_id in admin_ids:  # Проверка, что команду отправляет админ
         # Создаем клавиатуру на основе списка кнопок
         settings_buttons = ["Добавить модератора", "Изменить группу", "Изменить интервал отправки заявок", "Вернуться Назад"]
         settings_keyboard = create_keyboard(settings_buttons)
@@ -478,6 +570,12 @@ def update_moderator_ids():
     moderator_ids = [record[0] for record in moderator_records]
     return moderator_ids
 
+# Обновить админский список
+def update_admin_ids():
+    cursor.execute("SELECT admin_id FROM admins")
+    admin_records = cursor.fetchall()
+    admin_ids = [record[0] for record in admin_records]
+    return admin_ids
 
 # Добавить модератора
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'добавить модератора')  # and message.from_user.id in moderator_ids)
@@ -487,7 +585,7 @@ def add_mod(message):
     button_exit = types.KeyboardButton(text='Вернуться Назад')
     markup.add(button_exit)
 
-    if user_id in moderator_ids:  # Проверка, что команду отправляет модератор
+    if user_id in admin_ids:  # Проверка, что команду отправляет модератор
         bot.send_message(user_id, "Введите Chat ID Модератора: \n Чтобы получить ID модератора, пройдите по ссылке \n @getmyid_bot \n Пример: 5746051320 \n или нажмите на кнопку '⬅️ Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, mod_add)
     else:
@@ -498,7 +596,7 @@ def mod_add(message):
     user_id = message.from_user.id
 
     if moder_int.lower() == 'вернуться назад':
-        bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
+        bot.send_message(user_id, "Выход в меню модератора", reply_markup=admin_keyboard)
         return
 
     # Проверка, является ли moder_int целым числом
@@ -530,7 +628,7 @@ def add_group(message):
     markup.add(button_exit)
 
 
-    if user_id in moderator_ids:  # проверка, что команду отправляет модератор
+    if user_id in admin_ids:  # проверка, что команду отправляет модератор
         bot.send_message(user_id, "Введите Chat ID Канала для Публикаций: \n Чтобы узнать ID группы необходимо добавить данного Бота в канал, выдать разрешение на все функции и написать команду /get в группу.\n Пример: -1001965855662 \n или нажмите на кнопку 'Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, group_add)
     else:
@@ -558,7 +656,7 @@ def group_add(message):
     user_id = message.from_user.id
 
     if text.lower() == 'вернуться назад':
-        bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
+        bot.send_message(user_id, "Выход в меню модератора", reply_markup=admin_keyboard)
         return
 
     if is_int(text):
@@ -586,7 +684,7 @@ def add_cooldown(message):
     button_exit = types.KeyboardButton(text='Вернуться Назад')
     markup.add(button_exit)
 
-    if user_id in moderator_ids:  # проверка, что команду отправляет модератор
+    if user_id in admin_ids:  # проверка, что команду отправляет модератор
         bot.send_message(user_id, "Введите новое значение интервала отправки новых заявок в секундах. \n или нажмите кнопку 'Вернуться Назад'",reply_markup=markup)
         bot.register_next_step_handler(message, set_cooldown)
     else:
@@ -606,7 +704,7 @@ def set_cooldown(message):
     user_id = message.from_user.id
 
     if text.lower() == 'вернуться назад':
-        bot.send_message(user_id, "Выход в меню модератора", reply_markup=moderator_keyboard)
+        bot.send_message(user_id, "Выход в меню модератора", reply_markup=admin_keyboard)
         return
 
     if is_int(text):
@@ -631,7 +729,7 @@ def exit(message):
     else:
         bot.send_message(user_id, "У вас нет прав для выполнения этой команды.")
 
-
+#Раздел модератора
 #Публикация на канале
 @bot.message_handler(func=lambda message: message.chat.type == 'private' and message.text.lower() == 'публикация на канале')
 def request_text_for_publication(message):
@@ -787,7 +885,6 @@ def process_requests(message):
     else:
           bot.send_message(moder_id, "У вас нет прав для выполнения этой команды.")
 
-
 # Обработка нажатия на кнопки "Одобрить" и "Отклонить"
 @bot.callback_query_handler(func=lambda call: call.data.startswith(('true_', 'false_')))
 def handle_request_action(call):
@@ -799,31 +896,28 @@ def handle_request_action(call):
         request_data = cursor.fetchone()
         request_text, photo_id, video_id, user_id = request_data[0], request_data[1], request_data[2], request_data[3]
 
-        # Отметьте заявку как одобренную
-        cursor.execute("UPDATE requests SET status = 2 WHERE id = %s", (request_id,))
-        conn.commit()
+        # Запросить комментарий модератора
+        bot.send_message(call.from_user.id, f"Введите комментарий для заявки #{request_id} (одобрение):")
+        bot.register_next_step_handler(call.message, save_accept_reason, request_id, user_id, request_text, photo_id, video_id)
 
-        # Отправьте медиа или текст заявки в другой группе после одобрения
-        if photo_id:  # Если есть фото
-            bot.send_photo(other_group_chat_id, photo_id, caption=f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}")
-        elif video_id:  # Если есть видео
-            bot.send_video(other_group_chat_id, video_id, caption=f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}")
-        else:  # Если есть только текст
-            bot.send_message(other_group_chat_id, f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}")
-
-        # Уведомите пользователя о решении
-        bot.send_message(user_id, f"Ваша заявка #{request_id} была одобрена.")
-        bot.send_message(call.from_user.id, f"Заявка #{request_id} была одобрена.")
-        # Удалите кнопки после обработки действия
+        # Удалить кнопки после обработки действия
         bot.edit_message_reply_markup(chat_id=call.message.chat.id, message_id=call.message.message_id, reply_markup=None)
-
-        # Отметьте заявку как одобренную
-        cursor.execute("UPDATE requests SET status = 2 WHERE id = %s", (request_id,))
-        conn.commit()
 
     elif action == 'false':
         cursor.execute("SELECT user_id FROM requests WHERE id = %s", (request_id,))
         user_id = cursor.fetchone()[0]
+
+        # Показать кнопки с вариантами причин отклонения
+        keyboard = types.InlineKeyboardMarkup(row_width=2)
+        keyboard.add(types.InlineKeyboardButton(text="Причина 1", callback_data=f'reject_reason_{request_id}_1'),
+                     types.InlineKeyboardButton(text="Причина 2", callback_data=f'reject_reason_{request_id}_2'),
+                     types.InlineKeyboardButton(text="Причина 3", callback_data=f'reject_reason_{request_id}_3'),
+                     types.InlineKeyboardButton(text="БАН", callback_data=f'reject_reason_{request_id}_ban'),
+                     types.InlineKeyboardButton(text="Написать причину самому",
+                                                callback_data=f'reject_reason_{request_id}_custom'))
+
+        bot.send_message(call.from_user.id, f"Выберите причину отклонения для заявки #{request_id}:",
+                         reply_markup=keyboard)
 
         # Запросите причину отказа у модератора
         bot.send_message(call.from_user.id, f"Заявка #{request_id} отклонена. Пожалуйста, укажите причину отказа в ответ на данное сообщение.")
@@ -833,6 +927,36 @@ def handle_request_action(call):
 
         # обработчик сообщений для получения причины отклонения от модератора.
         bot.register_next_step_handler(call.message, save_rejection_reason, request_id, user_id)
+
+#def ban_user(message, request_id, user_id, request_text, phote_id, video_id):
+    #ban_user = message.text
+    #добавить пользователя в бан и сохранить комментарий модератора
+   # cursor.execute("UPDATE bans SET user_id, ban_reason = %s WHERE id = %s",(ban_text, ban_id))
+    #conn.commit()
+
+# Функция save_accept_reason
+def save_accept_reason(message, request_id, user_id, request_text, photo_id, video_id):
+    accept_text = message.text
+
+    # Отметить заявку как одобренную и сохранить комментарий модератора
+    cursor.execute("UPDATE requests SET status = 2, accept_reason = %s WHERE id = %s",
+                   (accept_text, request_id))
+    conn.commit()
+
+    # Отправить медиа или текст заявки в другую группу после одобрения
+    if photo_id:
+        bot.send_photo(other_group_chat_id, photo_id,
+                       caption=f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}\nКомментарий модератора: {accept_text}")
+    elif video_id:
+        bot.send_video(other_group_chat_id, video_id,
+                       caption=f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}\nКомментарий модератора: {accept_text}")
+    else:
+        bot.send_message(other_group_chat_id,
+                         f"Заявка #{request_id} одобрена. Текст заявки:\n{request_text}\nКомментарий модератора: {accept_text}")
+
+    # Уведомить пользователя о решении
+    bot.send_message(user_id, f"Ваша заявка #{request_id} была одобрена.")
+    bot.send_message(message.from_user.id, f"Заявка #{request_id} была одобрена.")
 
 # Определите функцию save_rejection_reason с дополнительными параметрами request_id и user_id.
 def save_rejection_reason(message, request_id, user_id):
